@@ -11,10 +11,45 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   name      String
   email     String   @unique
   googleId  String?  @unique
   avatarUrl String?
   createdAt DateTime @default(now())
+
+  subjects Subject[]
+}
+
+model Subject {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  topics      Topic[]
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  isCompleted Boolean  @default(false)
+
+  matters Matter[]
+
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  subjectId String?
+}
+
+model Matter {
+  id     String  @id @default(uuid())
+  name   String
+  isDone Boolean @default(false)
+
+  topic   Topic?  @relation(fields: [topicId], references: [id])
+  topicId String?
 }
