@@ -17,23 +17,10 @@ export async function authRoutes(app: FastifyInstance){
   app.post('/register', async (request) => {
     
     const bodySchema = z.object({
-      code: z.string()
+      access_token: z.string()
     })
 
-    const { code } = bodySchema.parse(request.body)
-
-    const tokenResponse = await axios.post(
-      'https://accounts.google.com/o/oauth2/v2/auth',
-      null, 
-      {
-        params: {
-          code,
-          client_id: process.env.GOOGLE_CLIENT_ID
-        }
-      }
-    )
-
-    const { access_token } = tokenResponse.data
+    const { access_token } = bodySchema.parse(request.body)
 
     const userResponse = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: {
