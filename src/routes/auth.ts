@@ -5,7 +5,7 @@ import { FastifyInstance } from "fastify";
 
 import axios from "axios";
 
-export async function authRoutes(app: FastifyInstance){
+export async function authRoutes(app: FastifyInstance) {
   app.get('/me', {
     onRequest: [authenticate]
   }, async (request) => {
@@ -15,7 +15,7 @@ export async function authRoutes(app: FastifyInstance){
   })
 
   app.post('/register', async (request) => {
-    
+
     const bodySchema = z.object({
       access_token: z.string()
     })
@@ -43,7 +43,7 @@ export async function authRoutes(app: FastifyInstance){
       }
     })
 
-    if(!user){
+    if (!user) {
       user = await prisma.user.create({
         data: {
           googleId: userInfo.id,
@@ -61,6 +61,8 @@ export async function authRoutes(app: FastifyInstance){
       sub: user.id,
       expiresIn: '15 days'
     })
+
+    console.log(token)
 
     return { token }
   })
