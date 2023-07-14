@@ -35,19 +35,26 @@ export async function topicRoutes(app: FastifyInstance) {
   })
 
   app.post('/topics', async (request) => {
+
+    const paramsSchema = z.object({
+      id: z.string().uuid()
+    })
+
     const bodySchema = z.object({
       name: z.string(),
       description: z.string(),
       isCompleted: z.boolean().default(false)
     })
 
+    const { id } = paramsSchema.parse(request.params)
     const { name, description, isCompleted } = bodySchema.parse(request.body)
 
     const topic = await prisma.topic.create({
       data: {
         name,
         description,
-        isCompleted
+        isCompleted,
+        subjectId: id
       }
     })
 

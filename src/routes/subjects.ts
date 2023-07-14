@@ -23,7 +23,7 @@ export async function subjectRoutes(app: FastifyInstance) {
       return {
         id: subject.id,
         name: subject.name,
-        excerpt: subject.description,
+        excerpt: subject.description.substring(0, 115).concat('...'),
         createdAt: subject.createdAt
       }
     })
